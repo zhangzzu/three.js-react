@@ -56,6 +56,7 @@ export default class Model extends Component {
         let controls = {
             pointColor,
             distance: 100,
+            intensity: 1
         }
 
         let gui = new dat.GUI()
@@ -66,6 +67,10 @@ export default class Model extends Component {
 
         gui.add(controls, "distance", 1, 100).onChange((e) => {
             pointLight.distance = e
+        })
+
+        gui.add(controls, "intensity", 1, 5).onChange((e) => {
+            pointLight.intensity = e
         })
 
         camera.position.set(-25, 30, 25)
