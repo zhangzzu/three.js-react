@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import * as THREE from 'three'
 import dat from 'dat.gui'
+import img from '../image/grasslight-big.jpg'
 
 export default class Model extends Component {
 
@@ -20,13 +21,33 @@ export default class Model extends Component {
         webglRenderer.shadowMap.enabled = true
         webglRenderer.shadowMap.type = THREE.PCFShadowMap
 
-        let planeGeometry = new THREE.PlaneGeometry(60, 40)
-        let planeMaterial = new THREE.MeshLambertMaterial({ color: 0xeeeeee })
+
+
+        let textTure = THREE.ImageUtils.loadTexture(img)
+        textTure.wrapS = THREE.RepeatWrapping
+        textTure.wrapT = THREE.RepeatWrapping
+        textTure.repeat.set(4, 4)
+
+
+        let planeGeometry = new THREE.PlaneGeometry(600, 400)
+        let planeMaterial = new THREE.MeshLambertMaterial({ map: textTure })
         let plane = new THREE.Mesh(planeGeometry, planeMaterial)
         plane.receiveShadow = true
         plane.rotation.x = -0.5 * Math.PI
         plane.position.set(15, 0, 0)
         scene.add(plane)
+
+        // let loader = new THREE.TextureLoader()
+        // loader.load(img, function (textTure) {
+        //     textTure.wrapS = THREE.RepeatWrapping
+        //     textTure.wrapT = THREE.RepeatWrapping
+        //     textTure.repeat.set(4, 4)
+        //     planeMaterial.map = textTure
+        // }, function (xhr) {
+        //     console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        // }, function (xhr) {
+        //     console.log(xhr);
+        // })
 
         let cubeGeometry = new THREE.BoxGeometry(4, 4, 4)
         let cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xff3333 })
@@ -45,9 +66,9 @@ export default class Model extends Component {
         sphere.position.set(10, 5, 10)
         scene.add(sphere)
 
-        let spotLight = new THREE.SpotLight(0xcccccc)
+        let spotLight = new THREE.SpotLight(0xffffff)
         spotLight.position.set(-40, 60, -10)
-        spotLight.lookAt(plane)
+        spotLight.castShadow = true
         scene.add(spotLight)
 
         let light = new THREE.HemisphereLight(0x0000ff, 0x00ff00, 0.6)
