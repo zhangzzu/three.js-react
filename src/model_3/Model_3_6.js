@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import * as THREE from 'three'
 import dat from 'dat.gui'
+import { Lensflare, LensflareElement } from '../lib/Lensflare'
 import img from '../image/grasslight-big.jpg'
 import img0 from '../image/lensflare0.png'
 import img3 from '../image/lensflare3.png'
@@ -19,7 +20,7 @@ export default class Model extends Component {
         let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000)
 
         let webglRenderer = new THREE.WebGLRenderer({ antialias: true })
-        webglRenderer.setClearColor(new THREE.Color(0xffffff))
+        //webglRenderer.setClearColor(new THREE.Color(0xffffff))
         webglRenderer.setSize(window.innerWidth, window.innerHeight)
         webglRenderer.shadowMap.enabled = true
         webglRenderer.shadowMap.type = THREE.PCFShadowMap
@@ -58,35 +59,49 @@ export default class Model extends Component {
         scene.add(sphere)
 
         let spotLight = new THREE.SpotLight(0xffffff)
-        spotLight.position.set(-40, 60, -10)
+        spotLight.position.set(40, 20, -40)
         spotLight.castShadow = true
         scene.add(spotLight)
 
-        let light = new THREE.HemisphereLight(0x0000ff, 0x00ff00, 0.6)
-        light.position.set(0, 500, 0)
-        scene.add(light)
+        let debuge = new THREE.CameraHelper(spotLight.shadow.camera)
+        scene.add(debuge)
 
-        let flare0 = THREE.ImageUtils.loadTexture(img0)
-        let flare3 = THREE.ImageUtils.loadTexture(img3)
+        let textureLoader = new THREE.TextureLoader()
+        let flare0 = textureLoader.load(img0)
+        let flare3 = textureLoader.load(img3)
 
-        let flareColor = new THREE.Color(0xffaacc)
-        let lenFlare = new THREE.LensFlare(flare0, 350, 0.0, THREE.AdditiveBlending, flareColor)
-        lenFlare.add(flare3, 60, 0.6, THREE.AdditiveBlending)
-        lenFlare.add(flare3, 70, 0.7, THREE.AdditiveBlending)
-        lenFlare.add(flare3, 120, 0.9, THREE.AdditiveBlending)
-        lenFlare.add(flare3, 70, 1.0, THREE.AdditiveBlending)
+        let lensflare = new Lensflare()
 
-        lenFlare.position.copy(spotLight.position)
-        scene.add(lenFlare)
+        lensflare.addElement(new LensflareElement(flare0, 512, 0))
+        lensflare.addElement(new LensflareElement(flare3, 512, 0))
+
+        spotLight.add(lensflare)
+
 
         let controls = {
-            intensity: 0.6
+            intensity: 0.6,
+            debuge: true,
+            stopLightMove: false
         }
+
+        let stopMove = false
 
         let gui = new dat.GUI()
 
         gui.add(controls, "intensity", 0, 1).onChange((e) => {
-            light.intensity = e
+            spotLight.intensity = e
+        })
+
+        gui.add(controls, "debuge").onChange((e) => {
+            if (e) {
+                scene.add(debuge)
+            } else {
+                scene.remove(debuge)
+            }
+        })
+
+        gui.add(controls, "stopLightMove").onChange((e) => {
+            stopMove = e
         })
 
         camera.position.set(-20, 15, 45)
@@ -97,7 +112,16 @@ export default class Model extends Component {
 
         renderScene()
 
+        let step = 0
+
         function renderScene() {
+            if (!stopMove) {
+                step += 0.02
+
+                spotLight.position.z = -8
+                spotLight.position.y = +(27 * (Math.sin(step / 3)))
+                spotLight.position.x = 10 + (26 * (Math.cos(step / 3)))
+            }
 
             requestAnimationFrame(renderScene)
             webglRenderer.render(scene, camera)
