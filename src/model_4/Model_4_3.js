@@ -34,9 +34,12 @@ export default class Model extends Component {
             addCube: () => {
                 let cubeSize = 5
                 let cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize)
-                let cubeMaterial = new THREE.MeshLambertMaterial({
-                    color: '#aaffss'
+                let cubeMaterial = new THREE.MeshBasicMaterial({
+                    color: '#ff0000',
+                    transparent: true,
+                    blending: THREE.MultiplyBlending
                 })
+                //threejs 纵深是指物体的纵深
                 let cubeDepth = new THREE.MeshDepthMaterial()
                 let cube = new createMultiMaterialObject(cubeGeometry, [cubeMaterial, cubeDepth])
                 cube.castShadow = true
@@ -50,9 +53,11 @@ export default class Model extends Component {
         let gui = new dat.GUI()
         gui.add(controls, "cameraNear", 0, 10).onChange((e) => {
             camera.near = e
+            camera.updateProjectionMatrix()
         })
         gui.add(controls, "cameraFar", 50, 100).onChange((e) => {
             camera.far = e
+            camera.updateProjectionMatrix()
         })
         gui.add(controls, "removeCube")
         gui.add(controls, "addCube")
