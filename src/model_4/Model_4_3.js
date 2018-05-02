@@ -22,10 +22,6 @@ export default class Model extends Component {
         camera.position.set(-50, 40, 50)
         camera.lookAt(scene.position)
 
-        let spotLight = new THREE.SpotLight({ colro: 0xffffff })
-        spotLight.position.set(10, 10, 10)
-        scene.add(spotLight)
-
         let controls = {
             cameraNear: camera.near,
             cameraFar: camera.far,
@@ -38,9 +34,11 @@ export default class Model extends Component {
             addCube: () => {
                 let cubeSize = 5
                 let cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize)
-                //添加场景的纵深效果
-                let cubeMaterial = new THREE.MeshDepthMaterial()
-                let cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
+                let cubeMaterial = new THREE.MeshLambertMaterial({
+                    color: '#aaffss'
+                })
+                let cubeDepth = new THREE.MeshDepthMaterial()
+                let cube = new createMultiMaterialObject(cubeGeometry, [cubeMaterial, cubeDepth])
                 cube.castShadow = true
                 cube.position.x = -60 + Math.round((Math.random() * 100))
                 cube.position.y = Math.round((Math.random() * 10))
@@ -52,11 +50,9 @@ export default class Model extends Component {
         let gui = new dat.GUI()
         gui.add(controls, "cameraNear", 0, 10).onChange((e) => {
             camera.near = e
-            camera.updateProjectionMatrix()
         })
         gui.add(controls, "cameraFar", 50, 100).onChange((e) => {
             camera.far = e
-            camera.updateProjectionMatrix()
         })
         gui.add(controls, "removeCube")
         gui.add(controls, "addCube")
@@ -83,6 +79,20 @@ export default class Model extends Component {
             })
             requestAnimationFrame(renderScene)
             webglRenderer.render(scene, camera)
+        }
+
+        function createMultiMaterialObject(geometry, materials) {
+
+            var group = new THREE.Group();
+
+            for (var i = 0, l = materials.length; i < l; i++) {
+
+                group.add(new THREE.Mesh(geometry, materials[i]));
+
+            }
+
+            return group;
+
         }
     }
 
