@@ -34,9 +34,11 @@ export default class Model extends Component {
             addCube: () => {
                 let cubeSize = 5
                 let cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize)
-                //添加场景的纵深效果
-                let cubeMaterial = new THREE.MeshDepthMaterial()
-                let cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
+                let cubeMaterial = new THREE.MeshLambertMaterial({
+                    color: '#aaffss'
+                })
+                let cubeDepth = new THREE.MeshDepthMaterial()
+                let cube = new createMultiMaterialObject(cubeGeometry, [cubeMaterial, cubeDepth])
                 cube.castShadow = true
                 cube.position.x = -60 + Math.round((Math.random() * 100))
                 cube.position.y = Math.round((Math.random() * 10))
@@ -77,6 +79,20 @@ export default class Model extends Component {
             })
             requestAnimationFrame(renderScene)
             webglRenderer.render(scene, camera)
+        }
+
+        function createMultiMaterialObject(geometry, materials) {
+
+            var group = new THREE.Group();
+
+            for (var i = 0, l = materials.length; i < l; i++) {
+
+                group.add(new THREE.Mesh(geometry, materials[i]));
+
+            }
+
+            return group;
+
         }
     }
 
