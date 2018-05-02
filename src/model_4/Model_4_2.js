@@ -22,6 +22,10 @@ export default class Model extends Component {
         camera.position.set(-50, 40, 50)
         camera.lookAt(scene.position)
 
+        let spotLight = new THREE.SpotLight({ colro: 0xffffff })
+        spotLight.position.set(10, 10, 10)
+        scene.add(spotLight)
+
         let controls = {
             cameraNear: camera.near,
             cameraFar: camera.far,
@@ -48,9 +52,11 @@ export default class Model extends Component {
         let gui = new dat.GUI()
         gui.add(controls, "cameraNear", 0, 50).onChange((e) => {
             camera.near = e
+            camera.updateProjectionMatrix()
         })
         gui.add(controls, "cameraFar", 50, 5000).onChange((e) => {
             camera.far = e
+            camera.updateProjectionMatrix()
         })
         gui.add(controls, "removeCube")
         gui.add(controls, "addCube")
