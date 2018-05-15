@@ -3,10 +3,17 @@ import * as THREE from 'three'
 import Stats from './lib/stats'
 import dat from 'dat.gui'
 
+
+let gui
 export default class Model extends Component {
 
     componentDidMount() {
+        gui = new dat.GUI()
         this.initModel()
+    }
+
+    componentWillUnmount() {
+        gui.destroy()
     }
 
     initState() {
@@ -74,7 +81,6 @@ export default class Model extends Component {
             webGLRenderer.render(scene, camera)
         }
 
-        let gui = new dat.GUI()
         gui.add(controls, 'width', 0, 40).onChange(controls.redraw)
         gui.add(controls, 'height', 0, 40).onChange(controls.redraw)
         gui.add(controls, 'widthSegments', 0, 10).onChange(controls.redraw)

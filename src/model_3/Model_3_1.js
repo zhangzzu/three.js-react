@@ -2,11 +2,18 @@ import React, { Component } from 'react'
 import * as THREE from 'three'
 import dat from 'dat.gui'
 
+let gui
+
 export default class Model extends Component {
 
 
     componentDidMount() {
+        gui = new dat.GUI()
         this.initModel()
+    }
+
+    componentWillUnmount() {
+        gui.destroy()
     }
 
     initModel() {
@@ -62,7 +69,6 @@ export default class Model extends Component {
             disableLight: false
         }
 
-        let gui = new dat.GUI()
         gui.addColor(controls, 'ambiColor').onChange((e) => {
             ambientLight.color = new THREE.Color(e)
         })

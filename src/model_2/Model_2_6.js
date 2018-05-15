@@ -2,10 +2,17 @@ import React, { Component } from 'react'
 import * as THREE from 'three'
 import dat from 'dat.gui'
 
+let gui
+
 export default class Model extends Component {
 
     componentDidMount() {
+        gui = new dat.GUI()
         this.initModel()
+    }
+
+    componentWillUnmount() {
+        gui.destroy()
     }
 
     initModel() {
@@ -75,8 +82,6 @@ export default class Model extends Component {
                 controls.positionZ = cube.position.z;
             }
         }
-
-        let gui = new dat.GUI()
 
         let guiScale = gui.addFolder('scale')
         guiScale.add(controls, 'scaleX', 0, 5)

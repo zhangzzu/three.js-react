@@ -2,10 +2,16 @@ import React, { Component } from 'react'
 import * as THREE from 'three'
 import dat from 'dat.gui'
 
+let gui
 export default class Model extends Component {
 
     componentDidMount() {
+        gui = new dat.GUI()
         this.initModel()
+    }
+
+    componentWillUnmount() {
+        gui.destroy()
     }
 
     initModel() {
@@ -64,7 +70,7 @@ export default class Model extends Component {
             }
         }
 
-        let gui = new dat.GUI()
+
         gui.add(controls, 'rotationSpeed', 0, 0.5)
         gui.add(controls, 'addCube');
         gui.add(controls, 'removeCube');

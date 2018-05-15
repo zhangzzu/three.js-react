@@ -64,7 +64,9 @@ export default class Model extends Component {
 
     render() {
         return (
-            <div id="web-gl"></div>
+            <body style={{ margin: 0, overflow: 'hidden' }}>
+                <div id="web-gl"></div>
+            </body>
         )
     }
-}
+} 

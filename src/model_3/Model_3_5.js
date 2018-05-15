@@ -3,13 +3,19 @@ import * as THREE from 'three'
 import dat from 'dat.gui'
 import img from '../image/grasslight-big.jpg'
 
+let gui
 export default class Model extends Component {
 
     componentDidMount() {
-        this.initMode()
+        gui = new dat.GUI()
+        this.initModel()
     }
 
-    initMode() {
+    componentWillUnmount() {
+        gui.destroy()
+    }
+
+    initModel() {
 
         let scene = new THREE.Scene()
 
@@ -78,8 +84,6 @@ export default class Model extends Component {
         let controls = {
             intensity: 0.6
         }
-
-        let gui = new dat.GUI()
 
         gui.add(controls, "intensity", 0, 1).onChange((e) => {
             light.intensity = e

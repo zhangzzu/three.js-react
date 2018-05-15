@@ -2,13 +2,20 @@ import React, { Component } from 'react'
 import * as THREE from 'three'
 import dat from 'dat.gui'
 
+let gui
+
 export default class Model extends Component {
 
     componentDidMount() {
-        this.initMode()
+        gui = new dat.GUI()
+        this.initModel()
     }
 
-    initMode() {
+    componentWillUnmount() {
+        gui.destroy()
+    }
+
+    initModel() {
         let scene = new THREE.Scene()
 
         let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 500)
@@ -50,7 +57,6 @@ export default class Model extends Component {
             }
         }
 
-        let gui = new dat.GUI()
         gui.add(controls, "cameraNear", 0, 10).onChange((e) => {
             camera.near = e
             camera.updateProjectionMatrix()

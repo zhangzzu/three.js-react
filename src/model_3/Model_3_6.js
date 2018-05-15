@@ -6,14 +6,19 @@ import img from '../image/grasslight-big.jpg'
 import img0 from '../image/lensflare0.png'
 import img3 from '../image/lensflare3.png'
 
-
+let gui
 export default class Model extends Component {
 
     componentDidMount() {
-        this.initMode()
+        gui = new dat.GUI()
+        this.initModel()
     }
 
-    initMode() {
+    componentWillUnmount() {
+        gui.destroy()
+    }
+
+    initModel() {
 
         let scene = new THREE.Scene()
 
@@ -86,7 +91,6 @@ export default class Model extends Component {
 
         let stopMove = false
 
-        let gui = new dat.GUI()
 
         gui.add(controls, "intensity", 0, 1).onChange((e) => {
             spotLight.intensity = e

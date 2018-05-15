@@ -2,10 +2,16 @@ import React, { Component } from 'react'
 import * as THREE from 'three'
 import dat from 'dat.gui'
 
+let gui
 export default class Model extends Component {
 
     componentDidMount() {
+        gui = new dat.GUI()
         this.initModel()
+    }
+
+    componentWillUnmount() {
+        gui.destroy()
     }
 
     initModel() {
@@ -57,8 +63,6 @@ export default class Model extends Component {
             selectedMesh: 'cube',
             shading: "flat"
         }
-
-        let gui = new dat.GUI()
 
         gui.add(controls, "shading", ["flat", "smooth"]).onChange(e => {
             switch (e) {

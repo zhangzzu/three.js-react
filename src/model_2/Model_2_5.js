@@ -2,13 +2,20 @@ import React, { Component } from 'react'
 import * as THREE from 'three'
 import dat from 'dat.gui'
 
+let gui
+
 export default class Model extends Component {
 
     componentDidMount() {
-        this.initMode()
+        gui = new dat.GUI()
+        this.initModel()
     }
 
-    initMode() {
+    componentWillUnmount() {
+        gui.destroy()
+    }
+
+    initModel() {
         let scene = new THREE.Scene()
 
         let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000)
@@ -97,7 +104,6 @@ export default class Model extends Component {
         controlPoints.push(addControl(0, 0, 0))
         controlPoints.push(addControl(0, 0, 3))
 
-        let gui = new dat.GUI()
         for (let i = 0; i < 8; i++) {
             let f1 = gui.addFolder("Vertices" + (i + 1))
             f1.add(controlPoints[i], "x", -10, 10)
